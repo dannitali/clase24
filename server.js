@@ -1,133 +1,41 @@
-const express= require('express')
-const dotenv = require('dotenv')
-const color=require('colors')
-
-
-//vincular el archivo .env
-
+const express = require('express')
+const dotenv = require ('dotenv')
+const colors = require('colors')
+const conectarDB = require('./config/db')
+//dependencias de rutas 
+const bootcampRoutes = require('./routes/bootcampRoutes')
+const CoursesRoutes = require('./routes/coursesRoutes')
+const ReviewsRoutes = require('./routes/reviewsRoutes')
+const userRoutes = require ('./routes/usersRoutes')
+const cookieParser = require('cookie-parser')
+//vincular el archivo. env 
 dotenv.config(
-    {path : './config/.env'} // el ./ nos permite ingresar a una carpeta desde la raiz
+    {path:'./config/.env'}
 )
-//construir el objeto de la aplicacion app:
-app = express()
+
+//conexion base de datos
+conectarDB()
+
+//contruir el objeto de la aplicación
+const app = express()
+app.use(express.json())
+app.use(cookieParser())
 
 
+//conectar las rutas 
+//al objeto
+app.use('/api/v1/devcamp/bootcamps',
+bootcampRoutes)
 
-//RUTAS DE BOOTCAMPS:
-//enpoint 
-app.get('/bootcamps', (req, res) =>{
-    res.json({
-        sucess : true, 
-        msg: "aqui se mostraran todos los bootcamps"
-    })
-})
+app.use('/api/v2/devcamp/courses',
+CoursesRoutes)
 
-//traer un bootcampo por id 
-//enpoint 
-app.get('/bootcamps/:id', (req, res) =>{
-    res.json({
-        sucess : true, 
-        msg:`aqui se mostraran bootcampsc cuyo id es ${req.params.id}`
-    })
-})
+app.use('/api/v3/devcamp/reviews',
+ReviewsRoutes)
 
+app.use('/api/v3/devcamp/auth',
+userRoutes)
 
-//CREAR UN BOOTCAMPS:
-app.post('/bootcamps', (req, res) =>{
-    res.json({
-        sucess : true, 
-        msg: "aqui se creara un bootcamp"
-    })
-})
-
-
-//ACTUALIZAR UN BOOTCAMP POR ID
-app.put('/bootcamps/:id', (req, res) =>{
-    res.json({
-        sucess : true, 
-        msg:`aqui se editar el bootcampsc cuyo id es ${req.params.id}`
-    })
-})
-
-
-//ELIMINAR UN BOOTCAMP:
-app.delete('/bootcamps', (req, res) =>{
-    res.json({
-        sucess : true, 
-        msg: `aqui se eliminara un bootcamp cuyo id es : ${req.params.id}`
-    })
-})
-
-
-
-
-//----------------------------------------------------------------------------------------------------------------------------------------------
-//ENPONTS USUARIOS:
-//MOSTRAR TODOS LOS USUARIOS
-app.get('/usuarios', (req, res) =>{
-    res.json({
-        sucess: true,
-        msg : "aqui se mostraran todos los usuarios"
-    })
-})
-
-
-//MOSTRAR LOS USUARIOS POR ID
-app.get('/usuarios/:id', (req, res) =>{
-    res.json({
-        sucess : true,
-        msg : `aqui se mostraran los usuarios cuyo id es ${req.params.id}`
-    })
-})
-
-
-
-//CREAR UN USUARIO:
-app.post('/usuarios', (req, res) =>{
-    res.json({
-        sucess : true, 
-        msg: "aqui se creara un usuario"
-    })
-})
-
-
-
-//ACTUZALIZAR POR ID 
-app.put('/usuarios/:id', (req, res) =>{
-    res.json({
-        sucess : true,
-        msg : `aqui se actualizaran los usuarios cuyo id es ${req.params.id}`
-
-    })
-})
-
-
-//ELIMINAR UN UUSARIO POR ID:
-app.delete('/usuarios/:id', (req, res) =>{
-    res.json({
-        sucess : true, 
-        msg: `aqui se eliminara un usuario cuyo id es : ${req.params.id}`
-    })
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//construir un servidor :
-app.listen(process.env.PUERTO ,() => {
-    console.log(`Servidor en ejecucion : ${process.env.PUERTO}`.bgRed.green.bold); //para incrustar alguna variable es con : ${ }, lo ultimo e spar agregar colores a la letra, fondo, etc
+app.listen(process.env.PUERTO ,()=> {
+console.log(`servidor en ejecucion: ${process.env.PUERTO}`.bgYellow.bgGreen.bold)
 })
