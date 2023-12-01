@@ -4,7 +4,7 @@ const bootcampModel = require('../models/bootcampModel')
 const mongoose = require('mongoose')
 //dependencias al middleware
 
-const{protect,authorize}
+const{protect, authorize}
     = require ('../middleware/auth')
 
 const router = express.Router()
@@ -90,7 +90,10 @@ router.get('/:id',async(req, res)=>{
 
 //crear un bootcamps
 
-router.post('/' , protect , async (req, res)=>{
+router.post('/' , 
+                protect , 
+                authorize("publisher"), 
+                async (req, res)=>{
     try{
         const newBootcamp =
         await bootcampModel.create(req.body)

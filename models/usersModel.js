@@ -22,10 +22,10 @@ const userShema= new mongoose.Schema({
         //para que el password no se visualise
          select: false 
     },
-    rol :{
+    role :{
         type: String,
         enum: ["admin", "user", "publisher"],
-        default:"user"
+        default:"admin"
     },
     createdAt:{
         type: Date ,
